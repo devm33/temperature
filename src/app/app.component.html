@@ -1,4 +1,9 @@
-<li *ngFor="let recording of recordings | async">
+<div *ngFor="let recording of recordings | async">
+  <div class="temp">
   {{ recording.F | number:'1.2-2' }}
-  {{ recording.created | date:'M/d/yy, h:mm:ss a' }}
-</li>
+  </div>
+  <div class="updated">
+    Last updated:
+    {{ recording.created | date:'M/d/yy, h:mm:ss a' }}
+  </div>
+</div>
