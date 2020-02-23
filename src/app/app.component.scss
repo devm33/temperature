@@ -1,6 +1,10 @@
 :host {
-  display: block;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .temp {
-  font-size: xxx-large;
+  font-size: 20vh;
 }

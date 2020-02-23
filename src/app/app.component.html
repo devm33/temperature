@@ -1,4 +1,4 @@
-<div *ngFor="let recording of recordings | async">
+<ng-container *ngFor="let recording of recordings | async">
   <div class="temp">
   {{ recording.F | number:'1.2-2' }}
   </div>
@@ -6,4 +6,4 @@
     Last updated:
     {{ recording.created | date:'M/d/yy, h:mm:ss a' }}
   </div>
-</div>
+</ng-container>
