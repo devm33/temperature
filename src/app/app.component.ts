@@ -18,7 +18,7 @@ export class AppComponent {
   recordings: Observable<Recording[]>;
 
   constructor(db: AngularFireDatabase) {
-    this.recordings = db.list<Recording>('/recordings', ref => ref.orderByChild('created').limitToFirst(1)).valueChanges();
+    this.recordings = db.list<Recording>('/recordings', ref => ref.orderByChild('created').limitToLast(1)).valueChanges();
   }
 }
 
