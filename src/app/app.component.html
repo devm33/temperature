@@ -5,5 +5,8 @@
   <div class="updated">
     Last updated:
     {{ recording.created | date:'M/d/yy, h:mm:ss a' }}
+    <span *ngIf="isStaleRecording(recording.created)" class="warning">
+      (Warning old)
+    </span>
   </div>
 </ng-container>
