@@ -1,0 +1,15 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": false,
+    "recordings": {
+      ".indexOn": "created",
+      "$recording": {
+        ".write": "!data.exists()",
+        "F": { ".validate": "newData.isNumber()" },
+        "created": { ".validate": "newData.isNumber()" },
+        "$other": { ".validate": false }
+      }
+    }
+  }
+}
