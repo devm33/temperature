@@ -15,10 +15,10 @@ interface Recording {
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  recordings: Observable<Recording[]>;
+  latest$: Observable<Recording>;
 
   constructor(db: AngularFireDatabase) {
-    this.recordings = db.list<Recording>('/recordings', ref => ref.orderByChild('created').limitToLast(1)).valueChanges();
+    this.latest$ = db.object<Recording>('/rooms/first/latest').valueChanges();
   }
 
   isStaleRecording(created: number): boolean {

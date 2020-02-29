@@ -1,4 +1,4 @@
-<ng-container *ngFor="let recording of recordings | async">
+<ng-container *ngIf="latest$ | async as recording">
   <div class="temp">
   {{ recording.F | number:'1.2-2' }}
   </div>
