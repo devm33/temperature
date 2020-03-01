@@ -2,6 +2,7 @@
   "name": "functions",
   "scripts": {
     "lint": "tslint --project tsconfig.json",
+    "test": "ts-node node_modules/jasmine/bin/jasmine --config=jasmine.json",
     "build": "tsc",
     "serve": "npm run build && firebase emulators:start --only functions",
     "shell": "npm run build && firebase functions:shell",
@@ -15,12 +16,16 @@
   "main": "lib/index.js",
   "dependencies": {
     "firebase-admin": "^8.6.0",
-    "firebase-functions": "^3.3.0"
+    "firebase-functions": "^3.3.0",
+    "firebase-functions-test": "^0.1.7"
   },
   "devDependencies": {
+    "@types/jasmine": "^3.5.7",
+    "jasmine": "^3.5.0",
+    "jasmine-spec-reporter": "^4.2.1",
+    "ts-node": "^8.6.2",
     "tslint": "^5.12.0",
-    "typescript": "^3.2.2",
-    "firebase-functions-test": "^0.1.6"
+    "typescript": "^3.2.2"
   },
   "private": true
 }

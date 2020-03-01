@@ -1,15 +1,15 @@
-import { database, EventContext } from 'firebase-functions';
+import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
 admin.initializeApp();
 
 // Listens for new temperature recordings and updates fields accordingly.
-export const addTemperature = database.ref('/recordings/{recording}')
+export const addTemperature = functions.database.ref('/recordings/{recording}')
   .onCreate(handleNewTemperature);
 
 async function handleNewTemperature(
-  snapshot: database.DataSnapshot,
-  context: EventContext) {
+  snapshot: functions.database.DataSnapshot,
+  context: functions.EventContext) {
   const room = admin.database().ref('/rooms/first');
   await room.child('latest').set(snapshot.val());
   // TODO add ten minute average
