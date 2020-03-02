@@ -22,13 +22,13 @@ async function handleNewTemperature(
   await roomRef.child('latest').set(recording);
 
   // Update the last ten rolling average.
-  const room = await roomRef.once('value');
-  if (!room.hasChild('rolling')) {
+  const rolling = await roomRef.child('rolling').once('value');
+  if (!rolling.exists()) {
     await roomRef.child('rolling').set(recording.F);
   } else {
-    const rolling = <number>room.child('rolling').val();
+    const rollingVal = <number>rolling.val();
     await roomRef.child('rolling')
-      .set(rolling - (rolling / 10) + (recording.F / 10));
+      .set(rollingVal - (rollingVal / 10) + (recording.F / 10));
   }
 
   // TODO group recording data by hour (and then delete).
