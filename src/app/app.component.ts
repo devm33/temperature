@@ -16,9 +16,11 @@ interface Recording {
 })
 export class AppComponent {
   latest$: Observable<Recording>;
+  rolling$: Observable<number>;
 
   constructor(db: AngularFireDatabase) {
     this.latest$ = db.object<Recording>('/rooms/first/latest').valueChanges();
+    this.rolling$ = db.object<number>('/rooms/first/rolling').valueChanges();
   }
 
   isStaleRecording(created: number): boolean {
