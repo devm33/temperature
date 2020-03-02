@@ -3,11 +3,10 @@
   {{ recording.F | number:'1.2-2' }}
   </div>
   <div class="updated">
-    Last updated:
-    {{ recording.created | date:'M/d/yy, h:mm:ss a' }}
-    <span *ngIf="isStaleRecording(recording.created)" class="warning">
-      (Warning old)
-    </span>
+    Last updated {{ recording.created | timeAgo }}.
+  </div>
+  <div *ngIf="isStaleRecording(recording.created)" class="warning">
+    Warning sensor potentially offline.
   </div>
 </ng-container>
 <ng-container *ngIf="rolling$ | async as rolling">
@@ -15,6 +14,6 @@
     {{ rolling | number:'1.2-2'}}
   </div>
   <div class="label">
-    10-minute rolling average:
+    10-minute rolling average.
   </div>
 </ng-container>
