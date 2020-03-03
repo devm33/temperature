@@ -45,11 +45,11 @@ async function updateRollingAverage(recording: Recording) {
   const rolling = await roomRef.child('rolling').once('value');
   if (!rolling.exists()) {
     await roomRef.child('rolling').set(recording.F);
-  } else {
-    const rollingVal = <number>rolling.val();
-    await roomRef.child('rolling')
-      .set(rollingVal - (rollingVal / 10) + (recording.F / 10));
+    return;
   }
+  const rollingVal = <number>rolling.val();
+  await roomRef.child('rolling')
+    .set(rollingVal - (rollingVal / 10) + (recording.F / 10));
 }
 
 // Finds any recordings older than an hour, adds them to hourly averages, and
@@ -57,16 +57,20 @@ async function updateRollingAverage(recording: Recording) {
 async function archiveOldRecordings() {
   const recordingsRef = admin.database().ref('/recordings');
   const recordings = <RecordingList>(await recordingsRef.once('value')).val();
-  const toBeArchived = Object.values(recordings).filter(isOldRecording);
-  for (const recording of toBeArchived) {
-    await addToHourlyAverage(recording);
-    await deleteRecording(recording);
+  if (!recordings) {
+    return;
+  }
+  for (const [id, recording] of Object.entries(recordings)) {
+    if (shouldBeArchived(recording)) {
+      await addToHourlyAverage(recording);
+      await deleteRecording(id);
+    }
   }
 }
 
 // Returns true if the recording is older than an hour ago.
-function isOldRecording(recording: Recording): boolean {
-  return moment(recording.created).isAfter(ONE_HOUR_AGO);
+function shouldBeArchived(recording: Recording): boolean {
+  return moment(recording.created).isBefore(ONE_HOUR_AGO);
 }
 
 // Adds a recording to its hourly average.
@@ -74,11 +78,19 @@ async function addToHourlyAverage(recording: Recording) {
   const created = moment(recording.created);
   const hourPath = `/hourly/first/${created.startOf('hour').valueOf()}`;
   const averageRef = admin.database().ref(hourPath);
-  const average = <HourlyAverage>(await averageRef.once('value')).val();
-  // TODO add to average
+  const average = await averageRef.once('value');
+  if (!average.exists()) {
+    await averageRef.set(<HourlyAverage>{ count: 1, average: recording.F });
+    return;
+  }
+  const cur = <HourlyAverage>average.val();
+  await averageRef.set(<HourlyAverage>{
+    count: cur.count + 1,
+    average: (cur.average * cur.count + recording.F) / (cur.count + 1),
+  });
 }
 
 // Removes a recording from the database.
-async function deleteRecording(recording: Recording) {
-  // TODO
+async function deleteRecording(recordingId: string) {
+  await admin.database().ref(`/recordings/${recordingId}`).remove();
 }
